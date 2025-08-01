@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atividade - CRUD & bootstrap</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+
+
+
+
+    <style>
+        body {
+            background-color: rgb(109, 33, 33);
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            color: rgb(255, 255, 255);
+        }
+
+        .espaco1::after,
+        .espaco2::after {
+            content: ' *';
+            color: rgb(255, 255, 255);
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .card {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div>
+        <div class="conteudo">
+
+            <!-- Cabeçalho e introdução -->
+            <h1 name="titulo">Cadastro dos Alunos(as) Estrela</h1>
+            <p id="primeiro-paragrafo">Posicionamento sobre conteúdo mais explorado, pelos alunos mais esforçados da
+                sala.</p>
+
+            <h2 name="titulo">Conteúdos Estudados:</h2>
+            <ul>
+                <li class="item">JavaScript</li>
+                <li class="item">CSS</li>
+                <li class="item">HTML</li>
+            </ul>
+
+        </div>
+
+        <div class="formList" style="display: flex; justify-content: space-around;">
+            <div class="card"
+                style="width: 16rem; justify-content: center; background-color: rgb(48, 22, 22); color: rgb(255, 255, 255);">
+                <div class="card-body">
+                    <form id="cadastroForm">
+
+                        <!-- Campo Nome -->
+                        <label class="espaco1">Nome</label>
+                        <input type="text" id="nome" required><br><br>
+
+                        <!-- Campo Email -->
+                        <label for="">E-mail</label>
+                        <input type="email" id="email"><br><br>
+
+                        <!-- Campo Senha -->
+                        <label class="espaco2">Senha</label>
+                        <input type="password" id="senha" required><br><br>
+
+                        <!-- Botão de Cadastro -->
+                        <div class="button-conf" style="padding-left: 65px;">
+                            <input type="submit" value="Cadastrar">
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Área de listagem dos usuários -->
+        <div class="card" style="width: 18rem; background-color: brown;">
+            <div class="card-body2">
+                <div id="listagem" style="padding: 20px; font-size: 20px; color: rgb(255, 255, 255);">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="card" style="width: 18rem;">
+            <div class="card-body3">
+                <div class="edicao" style="text-align: center; padding: 20px;">
+
+                    <!-- Edição -->
+                    <h1>Editar Aluno(a)</h1>
+
+                    <label for="">Numeração:</label><br>
+                    <input type="number" id="posicaoTroca"><br>
+
+                    <label for="">Novo Nome:</label><br>
+                    <input id="iptNovoNome" type="text" name=""><br>
+
+                    <label for="">Novo E-mail:</label><br>
+                    <input id="iptNovoEmail" type="text" name=""><br>
+
+                    <label for="">Nova Senha:</label><br>
+                    <input id="iptNovaSenha" type="text" name=""><br>
+
+                    <button id="btnTrocar">Troca</button><br>
+
+                    <!-- Exclusão -->
+                    <label for="">Informe qual item deseja remover</label>
+                    <input type="number" name="" id="idRemove"><br>
+                    <button id="btnRemover">Excluir</button>
+
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+    </div>
+
+
+    <script>
+
+        //Trabalhando com Formulário
+        //CRUD - Create - Read - Update - Delete
+        const formulario = document.getElementById("cadastroForm")
+
+        let usuariosBD = []
+
+        formulario.addEventListener("submit", cadastrar)
+
+        // Função para cadastrar novo usuário
+        function cadastrar(event) {
+            event.preventDefault();
+
+            const dados = {
+                nome: document.getElementById("nome").value,
+                email: document.getElementById("email").value,
+                senha: document.getElementById("senha").value,
+            }
+
+            usuariosBD.push(dados)
+
+            console.log(usuariosBD)
+
+            document.getElementById("nome").value = ""
+            document.getElementById("email").value = ""
+            document.getElementById("senha").value = ""
+
+            listarUsuarios()
+        }
+
+        const divList = document.getElementById("listagem") //Localizo a DIV listagem e armazeno em uma variavel
+
+        // Função para listar os usuários cadastrados
+        function listarUsuarios() {
+            divList.innerHTML = ""
+
+            for (let i = 0; i < usuariosBD.length; i++) { //Percorrendo o vetor que tem os dados
+                let nomeUsuario = usuariosBD[i]; //Armazenando os dados que dentro do indice em uma variavel
+                const paragrafoUserName = document.createElement("p") //Criando um elemento P (Paragrafo)
+                paragrafoUserName.textContent = i + 1 + " - " + nomeUsuario.nome; //Preenchendo o elemento P com o conteudo da variavel 
+                divList.appendChild(paragrafoUserName); //Adicinado o elemento P na DIV               
+            }
+
+
+        }
+
+        document.querySelector("#btnTrocar").addEventListener("click", trocaNome)
+
+        // Função que altera os dados de um usuário
+        function trocaNome(event) {
+            event.preventDefault();
+
+            const posicao = document.getElementById("posicaoTroca").value - 1;
+            const novoNome = document.getElementById("iptNovoNome").value;
+            const novoEmail = document.getElementById("iptNovoEmail").value;
+            const novaSenha = document.getElementById("iptNovaSenha").value;
+
+            // Atualiza apenas o que for preenchido
+            if (novoNome !== "") {
+                usuariosBD[posicao].nome = novoNome;
+            }
+            if (novoEmail !== "") {
+                usuariosBD[posicao].email = novoEmail;
+            }
+            if (novaSenha !== "") {
+                usuariosBD[posicao].senha = novaSenha;
+            }
+
+            // Atualiza a lista (só mostra nome)
+            listarUsuarios();
+
+            // Limpa os campos
+            document.getElementById("iptNovoNome").value = "";
+            document.getElementById("iptNovoEmail").value = "";
+            document.getElementById("iptNovaSenha").value = "";
+            document.getElementById("posicaoTroca").value = "";
+        }
+
+        document.querySelector("#btnRemover").addEventListener("click", removerItem)
+
+        // Função que remove um usuário pela posição informada
+        function removerItem(event) {
+            event.preventDefault();
+
+            let idRemove = document.getElementById('idRemove').value
+
+            idRemove = idRemove - 1
+
+            usuariosBD.splice(idRemove, 1)
+
+            listarUsuarios()
+
+            document.getElementById('idRemove').value = ""
+
+        }
+
+    </script>
+
+    <!-- Importando o JS do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
